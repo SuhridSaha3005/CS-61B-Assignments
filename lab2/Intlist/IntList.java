@@ -93,6 +93,7 @@ public class IntList {
             return C;
         }
     }
+    /** snaps installed again */
 
     /**
      * Returns a of consisting of the elements of A followed by the
