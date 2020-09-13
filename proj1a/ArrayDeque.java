@@ -1,15 +1,15 @@
 /** Circular Array List with instance variables items (array), size, nextFirst, nextLast
  *  nextFirst returns the index "before" first, nextLast returns the index "after" last. */
 
-public class ArrayDeque<ItemType> {
-    private ItemType[] items;
+public class ArrayDeque<T> {
+    private T[] items;
     private int size;
     private int nextFirst;
     private int nextLast;
 
     /** Constructor for the empty ArrayDeque. 8 given as default items.length. */
     public ArrayDeque() {
-        items = (ItemType []) new Object[8];
+        items = (T []) new Object[8];
         size = 0;
         nextFirst = 3;
         nextLast = 4;
@@ -24,7 +24,7 @@ public class ArrayDeque<ItemType> {
         }
     }
 
-    /** Returns the minimum of 2 integers (Probably should've imported java.lang.math but why not). */
+    /** Returns the minimum of 2 integers */
     private int min(int x, int y) {
         if (x < y) {
             return x;
@@ -40,7 +40,7 @@ public class ArrayDeque<ItemType> {
         int frontItems = min(items.length - front, size);
         int backBegin = remainder(front + frontItems, items.length);
         int backItems = size - frontItems;
-        ItemType[] a = (ItemType []) new Object[capacity];
+        T[] a = (T []) new Object[capacity];
         System.arraycopy(items, front, a, 0, frontItems);
         System.arraycopy(items, backBegin, a, frontItems, size - frontItems);
         items = a;
@@ -49,7 +49,7 @@ public class ArrayDeque<ItemType> {
     }
 
     /** Add 'item' to 'front' of ArrayDeque. */
-    public void addFirst(ItemType item) {
+    public void addFirst(T item) {
         if (size == items.length) {
             this.resize(4 * size);
         }
@@ -60,7 +60,7 @@ public class ArrayDeque<ItemType> {
     }
 
     /** Add 'item' to 'end' of ArrayDeque. */
-    public void addLast(ItemType item) {
+    public void addLast(T item) {
         if (size == items.length) {
             this.resize(4 * size);
         }
@@ -87,31 +87,35 @@ public class ArrayDeque<ItemType> {
     }
 
     /** Removes the front item of an array list. */
-    public ItemType removeFirst() {
+    public T removeFirst() {
         if (items.length >= 16 && 4 * size <= items.length) {
             this.resize(4 * (size - 1));
         }
         int firstIndex = this.circularIndex(0);
-        ItemType firstItem = items[firstIndex];
+        T firstItem = items[firstIndex];
         items[firstIndex] = null;
         size -= 1;
+        nextFirst = remainder(nextFirst + 1, items.length);
+        nextLast = remainder(nextFirst + size + 1, items.length);
         return firstItem;
     }
 
     /** Removes the end item of an array list. */
-    public ItemType removeLast() {
+    public T removeLast() {
         if (items.length >= 16 && 4 * size <= items.length) {
             this.resize(4 * (size - 1));
         }
         int lastIndex = this.circularIndex(size - 1);
-        ItemType lastItem = items[lastIndex];
+        T lastItem = items[lastIndex];
         items[lastIndex] = null;
         size -= 1;
+        nextLast = remainder(nextLast - 1, items.length);
+        nextFirst = remainder(nextLast - size - 1, items.length);
         return lastItem;
     }
 
     /** Returns the item placed at 'index' in array list. */
-    public ItemType get(int index) {
+    public T get(int index) {
         return items[circularIndex(index)];
     }
 
@@ -119,7 +123,7 @@ public class ArrayDeque<ItemType> {
     public void printDeque() {
         for (int i = 0; i < size - 1; i += 1) {
             System.out.print(this.get(i));
-            System.out.print("");
+            System.out.print(" ");
         }
         System.out.print(this.get(size - 1));
         System.out.println("\n");
