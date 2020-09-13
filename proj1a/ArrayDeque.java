@@ -17,10 +17,11 @@ public class ArrayDeque<T> {
 
     /** Remainder function, that returns a mod b and is between 0 and b - 1. */
     private int remainder(int dividend, int divisor) {
-        if (dividend >= 0) {
-            return dividend % divisor;
+        int rem = dividend % divisor;
+        if (rem >= 0) {
+            return rem;
         } else {
-            return (dividend % divisor) + divisor;
+            return rem + divisor;
         }
     }
 
@@ -94,7 +95,9 @@ public class ArrayDeque<T> {
         int firstIndex = this.circularIndex(0);
         T firstItem = items[firstIndex];
         items[firstIndex] = null;
-        size -= 1;
+        if (size > 0) {
+            size -= 1;
+        }
         nextFirst = remainder(nextFirst + 1, items.length);
         nextLast = remainder(nextFirst + size + 1, items.length);
         return firstItem;
@@ -108,7 +111,9 @@ public class ArrayDeque<T> {
         int lastIndex = this.circularIndex(size - 1);
         T lastItem = items[lastIndex];
         items[lastIndex] = null;
-        size -= 1;
+        if (size > 0) {
+            size -= 1;
+        }
         nextLast = remainder(nextLast - 1, items.length);
         nextFirst = remainder(nextLast - size - 1, items.length);
         return lastItem;

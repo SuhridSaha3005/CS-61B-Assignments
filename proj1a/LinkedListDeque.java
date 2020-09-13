@@ -53,7 +53,7 @@ public class LinkedListDeque<T> {
 
     /** Removes the first item from linked list. */
     public T removeFirst() {
-        if (size == 0) {
+        if (size > 0) {
             size -= 1;
         }
         T firstItem = sentinel.next.item;
@@ -64,7 +64,7 @@ public class LinkedListDeque<T> {
 
     /** Removes the last item from linked list. */
     public T removeLast() {
-        if (size == 0) {
+        if (size > 0) {
             size -= 1;
         }
         T lastItem = sentinel.prev.item;
