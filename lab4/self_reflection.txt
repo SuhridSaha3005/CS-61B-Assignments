@@ -4,27 +4,29 @@ ArrayDeque:
 
 Q: Give an example of at least one idea from the staff solution that would have made your solution better (if any).
 
-A: 
+A: I totally forgot that we could use get to implement resize, which made the staff solution so much more elegant. Other than that, most of my solution was alright and similar to the staff's.
 
 Q: What's something you felt proud of in your code, if anything?
 
-A:
+A: I liked how I wrote private methods called remainder (that generalized % in java) and circular index, which gives the index in internal array when you input the user index.
+Those made implementation much easier to think about and write and I felt proud about it.
 
 Q: What's something that was particularly inelegant in your code, if anything?
 
-A:
+A: I wrote a new min method instead of Math.min, and also I totally forgot that we could use get to implement resize, which made the staff solution so much more elegant.
 
 Q: What did you learn by talking to your partner about writing ArrayDeque?
 
-A:
+A: I realized I may have done some things very different from most people, such as using circular index and remainder, and my resize was so much more different.
+I also realized most of us forgot that we could use get for resize but otherwise most of us did pretty much the things similar to the staff solution.
 
 Q: What do you wish you would have known before writing ArrayDeque, if anything?
 
-A:
+A: That I could use get in resize, which was actually a bad mistake on my part. Also, the project 1a slides were really helpful, and for most of us, if we hadn't looked at it before doing the project, it would be infinitely harder.
 
 Q: If you wrote ArrayDeque again, what would you do differently, if anything?
 
-A:
+A: Use get in resize like the staff solution and use Math.min instead of a private min method if I ever use one. Otherwise, I am okay with my code.
 
 -----
 
@@ -32,27 +34,32 @@ LinkedListDeque:
 
 Q: Give an example of at least one idea from the staff solution that would have made your solution better (if any).
 
-A: 
+A: I forgot to include the case for list being empty or index exceeding size when implementing getRecursive, but otherwise most of the solution I implemented for LinkedList was the same as the staff's.
+I also could have made it a line shorter for removeLast/removeFirst but it was fine.
 
 Q: What's something you felt proud of in your code, if anything?
 
-A:
+A: I felt my constructor for Node made my implementation for add and remove quite elegant as my constructor used prev, item and next for the node.
+Also, the fact that most of my code matched the staff's was nice to know.
 
 Q: What's something that was particularly inelegant in your code, if anything?
 
-A:
+A: Most of it was alright, but a slight modification for remove, such as writing return null for size == 0 would've been better instead of writing if(size > 0) {size -= 1}.
+Also I may have added an extra 2 lines for sentinel when writing the constructor, but it didn't make it too much more inelegant so it's fine.
 
 Q: What did you learn by talking to your partner about writing LinkedListDeque?
 
-A:
+A: Most of us got the same errors when we first wrote/debugged our code so that sense of shared experience made me feel comfortable.
+Also, LinkedList was overall one of the most interesting data structures we've encountered.
 
 Q: What do you wish you would have known before writing LinkedListDeque, if anything?
 
-A:
+A: I thought the project 1a slides (as hints) were really useful and I wish I found about them earlier.
+Other than that, most of what we learned in class was super useful for LinkedListDeque.
 
 Q: If you wrote LinkedListDeque again, what would you do differently, if anything?
 
-A:
+A: I would make the same modifications to the empty list constructor and remove that I mentioned above.
 
 -----
 
@@ -60,4 +67,4 @@ Meta:
 
 Q: Did you like this design review process? Anything we should do differently next time?
 
-A: 
+A: The design review process was fun and I especially enjoyed discussing it with my colleagues as we could share new perspectives on the new concepts learned in 61b.
