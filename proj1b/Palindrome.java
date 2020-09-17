@@ -4,7 +4,7 @@ public class Palindrome {
         int i = 0;
         while (i < word.length()) {
             wordDeque.addLast(word.charAt(i));
-            i ++;
+            i++;
         }
         return wordDeque;
     }
