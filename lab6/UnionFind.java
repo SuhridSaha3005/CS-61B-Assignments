@@ -55,7 +55,7 @@ public class UnionFind {
         int v1Root = find(v1);
         int v2Root = find(v2);
         int combinedSize = sizeOf(v1) + sizeOf(v2);
-        if (sizeOf(v1) >= sizeOf(v2)) {
+        if (sizeOf(v1) > sizeOf(v2)) {
             parent[v2Root] = v1Root;
             parent[v1Root] = -1 * combinedSize;
         } else {
