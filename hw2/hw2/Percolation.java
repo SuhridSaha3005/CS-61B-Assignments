@@ -35,12 +35,6 @@ public class Percolation {
         }
         if (!isOpen(row, col)) {
             openSites.add(xyTo1D(row, col));
-            if (row == 0) {
-                grid.union(0, xyTo1D(row, col));
-            }
-            if (row == size - 1) {
-                grid.union((size * size) + 1, xyTo1D(row, col));
-            }
             if (inGrid(row - 1, col) && isOpen(row - 1, col)) {
                 grid.union(xyTo1D(row, col), xyTo1D(row - 1, col));
             }
@@ -52,6 +46,12 @@ public class Percolation {
             }
             if (inGrid(row, col + 1) && isOpen(row, col + 1)) {
                 grid.union(xyTo1D(row, col), xyTo1D(row, col + 1));
+            }
+            if (row == 0) {
+                grid.union(0, xyTo1D(row, col));
+            }
+            if (row == size - 1 && isFull(row, col)) {
+                grid.union((size * size) + 1, xyTo1D(row, col));
             }
         }
     }
