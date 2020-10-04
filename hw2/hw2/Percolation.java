@@ -15,12 +15,6 @@ public class Percolation {
             throw new java.lang.IllegalArgumentException("Grid size must be positive integer");
         }
         grid = new WeightedQuickUnionUF((N * N) + 2); // 0 = top, N * N + 1 = bottom
-        for (int i = 1; i <= N; i += 1) {
-            grid.union(0, i);
-        }
-        for (int j = (N * N) - N + 1; j <= N * N; j += 1) {
-            grid.union(N * N + 1, j);
-        }
         openSites = new ArrayList<>();
         size = N;
     }
@@ -41,6 +35,9 @@ public class Percolation {
         }
         if (!isOpen(row, col)) {
             openSites.add(xyTo1D(row, col));
+            if (row == 0) {
+                grid.union(0, xyTo1D(row, col));
+            }
             if (inGrid(row - 1, col) && isOpen(row - 1, col)) {
                 grid.union(xyTo1D(row, col), xyTo1D(row - 1, col));
             }
@@ -69,7 +66,11 @@ public class Percolation {
         if (!inGrid(row, col)) {
             throw new java.lang.IndexOutOfBoundsException("Row/Column must be within range!");
         }
-        return isOpen(row, col) && grid.connected(0, xyTo1D(row, col));
+        boolean checkFull = grid.connected(0, xyTo1D(row, col));
+        if (checkFull && row == size - 1) {
+            grid.union((size * size) + 1, xyTo1D(row, col));
+        }
+        return checkFull;
     }
 
     // number of open sites
@@ -79,6 +80,9 @@ public class Percolation {
 
     // does the system percolate?
     public boolean percolates() {
+        if (size == 1) {
+            return isOpen(0, 0);
+        }
         return grid.connected(0, (size * size) + 1);
     }
 

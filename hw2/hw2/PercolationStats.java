@@ -13,16 +13,18 @@ public class PercolationStats {
         }
         percolationData = new double[T];
         Percolation current;
-        for (double threshold : percolationData) {
+        int row;
+        int col;
+        for (int i = 0; i < T; i += 1) {
             current = pf.make(N);
             while (!current.percolates()) {
-                int row = StdRandom.uniform(N);
-                int col = StdRandom.uniform(N);
+                row = StdRandom.uniform(N);
+                col = StdRandom.uniform(N);
                 current.open(row, col);
             }
             double openSites = current.numberOfOpenSites();
-            double totalSites = N * N;
-            threshold = openSites / totalSites;
+            double totalSites = (double) N * N;
+            percolationData[i] = openSites / totalSites;
         }
     }
 
