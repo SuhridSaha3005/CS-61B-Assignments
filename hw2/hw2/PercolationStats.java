@@ -9,7 +9,7 @@ public class PercolationStats {
     // perform T independent experiments on an N-by-N grid
     public PercolationStats(int N, int T, PercolationFactory pf) {
         if (N <= 0 || T <= 0) {
-            throw new java.lang.IllegalArgumentException("Trials and Grid size must be positive integers");
+            throw new java.lang.IllegalArgumentException("Trials & Grid size must be positive");
         }
         percolationData = new double[T];
         Percolation current;
@@ -21,7 +21,7 @@ public class PercolationStats {
                 current.open(row, col);
             }
             double openSites = current.numberOfOpenSites();
-            double totalSites = N*N;
+            double totalSites = N * N;
             threshold = openSites / totalSites;
         }
     }

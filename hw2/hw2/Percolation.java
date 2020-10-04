@@ -10,16 +10,16 @@ public class Percolation {
     private final int size;
 
     // create N-by-N grid, with all sites initially blocked
-    public Percolation(int N){
+    public Percolation(int N) {
         if (N <= 0) {
-            throw new java.lang.IllegalArgumentException("Percolation grid size must be positive integer");
+            throw new java.lang.IllegalArgumentException("Grid size must be positive integer");
         }
-        grid = new WeightedQuickUnionUF(N*N + 2); // 0 = top, N*N + 1 = bottom
+        grid = new WeightedQuickUnionUF((N * N) + 2); // 0 = top, N * N + 1 = bottom
         for (int i = 1; i <= N; i += 1) {
             grid.union(0, i);
         }
-        for (int j = N*N - N + 1; j <= N*N; j += 1) {
-            grid.union(N*N + 1, j);
+        for (int j = (N * N) - N + 1; j <= N * N; j += 1) {
+            grid.union(N * N + 1, j);
         }
         openSites = new ArrayList<>();
         size = N;
@@ -37,7 +37,7 @@ public class Percolation {
     // open the site (row, col) if it is not open already
     public void open(int row, int col) {
         if (!inGrid(row, col)) {
-            throw new java.lang.IndexOutOfBoundsException("Row and Column must be within prescribed range!");
+            throw new java.lang.IndexOutOfBoundsException("Row/Column must be within range!");
         }
         if (!isOpen(row, col)) {
             openSites.add(xyTo1D(row, col));
@@ -59,7 +59,7 @@ public class Percolation {
     // is the site (row, col) open?
     public boolean isOpen(int row, int col) {
         if (!inGrid(row, col)) {
-            throw new java.lang.IndexOutOfBoundsException("Row and Column must be within prescribed range!");
+            throw new java.lang.IndexOutOfBoundsException("Row/Column must be within range!");
         }
         return openSites.contains(xyTo1D(row, col));
     }
@@ -67,9 +67,9 @@ public class Percolation {
     // is the site (row, col) full?
     public boolean isFull(int row, int col) {
         if (!inGrid(row, col)) {
-            throw new java.lang.IndexOutOfBoundsException("Row and Column must be within prescribed range!");
+            throw new java.lang.IndexOutOfBoundsException("Row/Column must be within range!");
         }
-        return grid.connected(0, xyTo1D(row, col));
+        return isOpen(row, col) && grid.connected(0, xyTo1D(row, col));
     }
 
     // number of open sites
@@ -79,8 +79,9 @@ public class Percolation {
 
     // does the system percolate?
     public boolean percolates() {
-        return grid.connected(0, size*size + 1);
+        return grid.connected(0, (size * size) + 1);
     }
 
-    public static void main(String[] args){}  // use for unit testing (not required, but keep this here for the autograder)
+    // use for unit testing (not required, but keep this here for the autograder)
+    public static void main(String[] args) { }
 }
