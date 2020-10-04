@@ -38,6 +38,9 @@ public class Percolation {
             if (row == 0) {
                 grid.union(0, xyTo1D(row, col));
             }
+            if (row == size - 1) {
+                grid.union((size * size) + 1, xyTo1D(row, col));
+            }
             if (inGrid(row - 1, col) && isOpen(row - 1, col)) {
                 grid.union(xyTo1D(row, col), xyTo1D(row - 1, col));
             }
@@ -66,11 +69,7 @@ public class Percolation {
         if (!inGrid(row, col)) {
             throw new java.lang.IndexOutOfBoundsException("Row/Column must be within range!");
         }
-        boolean checkFull = grid.connected(0, xyTo1D(row, col));
-        if (checkFull && row == size - 1) {
-            grid.union((size * size) + 1, xyTo1D(row, col));
-        }
-        return checkFull;
+        return grid.connected(0, xyTo1D(row, col));
     }
 
     // number of open sites
