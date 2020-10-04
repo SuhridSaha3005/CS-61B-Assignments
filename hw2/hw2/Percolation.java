@@ -36,26 +36,31 @@ public class Percolation {
         if (!inGrid(row, col)) {
             throw new java.lang.IndexOutOfBoundsException("Row/Column must be within range!");
         }
+        int sitePos = xyTo1D(row, col);
         if (!isOpen(row, col)) {
-            openSites.add(xyTo1D(row, col));
-            int[] adjacentRows = {row - 1, row + 1, row, row};
-            int[] adjacentCols = {col, col, col - 1, col + 1};
-            int r;
-            int c;
-            for (int i = 0; i < 4; i += 1) {
-                r = adjacentRows[i];
-                c = adjacentCols[i];
-                if (inGrid(r, c) && isOpen(r, c)) {
-                    grid.union(xyTo1D(row, col), xyTo1D(r, c));
-                    bottomlessGrid.union(xyTo1D(row, col), xyTo1D(r, c));
-                }
-            }
+            openSites.add(sitePos);
             if (row == 0) {
-                grid.union(0, xyTo1D(row, col));
-                bottomlessGrid.union(0, xyTo1D(row, col));
+                grid.union(0, sitePos);
+                bottomlessGrid.union(0, sitePos);
+                return;
             }
             if (row == size - 1) {
-                grid.union((size * size) + 1, xyTo1D(row, col));
+                grid.union((size * size) + 1, sitePos);
+                return;
+            }
+            int [] adj;
+            if (col == 0) {
+                adj = new int[]{sitePos - size, sitePos + 1, sitePos + size};
+            } else if (col == size - 1) {
+                adj = new int[]{sitePos - size, sitePos - 1, sitePos + size};
+            } else {
+                adj = new int[]{sitePos - size, sitePos - 1, sitePos + 1, sitePos + size};
+            }
+            for (int i : adj) {
+                if (openSites.contains(i)) {
+                    grid.union(sitePos, i);
+                    bottomlessGrid.union(sitePos, i);
+                }
             }
         }
     }
