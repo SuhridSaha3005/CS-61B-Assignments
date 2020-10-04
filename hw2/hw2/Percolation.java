@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 public class Percolation {
     private final WeightedQuickUnionUF grid;
+    private final WeightedQuickUnionUF bottomlessGrid;
     private final List<Integer> openSites;
     private final int size;
 
@@ -14,7 +15,9 @@ public class Percolation {
         if (N <= 0) {
             throw new java.lang.IllegalArgumentException("Grid size must be positive integer");
         }
-        grid = new WeightedQuickUnionUF((N * N) + 2); // 0 = top, N * N + 1 = bottom
+        grid = new WeightedQuickUnionUF((N * N) + 2);
+        bottomlessGrid = new WeightedQuickUnionUF((N * N) + 1);
+        // 0 = top, N * N + 1 = bottom
         openSites = new ArrayList<>();
         size = N;
     }
@@ -35,22 +38,23 @@ public class Percolation {
         }
         if (!isOpen(row, col)) {
             openSites.add(xyTo1D(row, col));
-            if (inGrid(row - 1, col) && isOpen(row - 1, col)) {
-                grid.union(xyTo1D(row, col), xyTo1D(row - 1, col));
-            }
-            if (inGrid(row + 1, col) && isOpen(row + 1, col)) {
-                grid.union(xyTo1D(row, col), xyTo1D(row + 1, col));
-            }
-            if (inGrid(row, col - 1) && isOpen(row, col - 1)) {
-                grid.union(xyTo1D(row, col), xyTo1D(row, col - 1));
-            }
-            if (inGrid(row, col + 1) && isOpen(row, col + 1)) {
-                grid.union(xyTo1D(row, col), xyTo1D(row, col + 1));
+            int[] adjacentRows = {row - 1, row + 1, row, row};
+            int[] adjacentCols = {col, col, col - 1, col + 1};
+            int r;
+            int c;
+            for (int i = 0; i < 4; i += 1) {
+                r = adjacentRows[i];
+                c = adjacentCols[i];
+                if (inGrid(r, c) && isOpen(r, c)) {
+                    grid.union(xyTo1D(row, col), xyTo1D(r, c));
+                    bottomlessGrid.union(xyTo1D(row, col), xyTo1D(r, c));
+                }
             }
             if (row == 0) {
                 grid.union(0, xyTo1D(row, col));
+                bottomlessGrid.union(0, xyTo1D(row, col));
             }
-            if (row == size - 1 && isFull(row, col)) {
+            if (row == size - 1) {
                 grid.union((size * size) + 1, xyTo1D(row, col));
             }
         }
@@ -69,7 +73,7 @@ public class Percolation {
         if (!inGrid(row, col)) {
             throw new java.lang.IndexOutOfBoundsException("Row/Column must be within range!");
         }
-        return grid.connected(0, xyTo1D(row, col));
+        return bottomlessGrid.connected(0, xyTo1D(row, col));
     }
 
     // number of open sites
@@ -79,9 +83,6 @@ public class Percolation {
 
     // does the system percolate?
     public boolean percolates() {
-        if (size == 1) {
-            return isOpen(0, 0);
-        }
         return grid.connected(0, (size * size) + 1);
     }
 
