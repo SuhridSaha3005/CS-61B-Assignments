@@ -39,17 +39,15 @@ public class Percolation {
         int sitePos = xyTo1D(row, col);
         if (!isOpen(row, col)) {
             openSites.add(sitePos);
+            int [] adj;
             if (row == 0) {
                 grid.union(0, sitePos);
                 bottomlessGrid.union(0, sitePos);
-                return;
-            }
-            if (row == size - 1) {
+                adj = new int[]{sitePos + size};
+            } else if (row == size - 1) {
                 grid.union((size * size) + 1, sitePos);
-                return;
-            }
-            int [] adj;
-            if (col == 0) {
+                adj = new int[]{sitePos + size};
+            } else if (col == 0) {
                 adj = new int[]{sitePos - size, sitePos + 1, sitePos + size};
             } else if (col == size - 1) {
                 adj = new int[]{sitePos - size, sitePos - 1, sitePos + size};
