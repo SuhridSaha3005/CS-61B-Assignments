@@ -1,14 +1,13 @@
 package hw2;
 
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
-import java.util.List;
-import java.util.ArrayList;
 
 public class Percolation {
     private final WeightedQuickUnionUF grid;
     private final WeightedQuickUnionUF bottomlessGrid;
-    private final List<Integer> openSites;
+    private final boolean[][] openSites;
     private final int size;
+    private int numberOfOpenSites;
 
     // create N-by-N grid, with all sites initially blocked
     public Percolation(int N) {
@@ -18,7 +17,13 @@ public class Percolation {
         grid = new WeightedQuickUnionUF((N * N) + 2);
         bottomlessGrid = new WeightedQuickUnionUF((N * N) + 1);
         // 0 = top, N * N + 1 = bottom
-        openSites = new ArrayList<>();
+        openSites = new boolean[N][N];
+        numberOfOpenSites = 0;
+        for (int i = 0; i < N; i += 1) {
+            for (int j = 0; j < N; j += 1) {
+                openSites[i][j] = false;
+            }
+        }
         size = N;
     }
 
@@ -37,7 +42,8 @@ public class Percolation {
             throw new java.lang.IndexOutOfBoundsException("Row/Column must be within range!");
         }
         if (!isOpen(row, col)) {
-            openSites.add(xyTo1D(row, col));
+            openSites[row][col] = true;
+            numberOfOpenSites += 1;
             int[] adjacentRows = {row - 1, row + 1, row, row};
             int[] adjacentCols = {col, col, col - 1, col + 1};
             int r;
@@ -65,7 +71,7 @@ public class Percolation {
         if (!inGrid(row, col)) {
             throw new java.lang.IndexOutOfBoundsException("Row/Column must be within range!");
         }
-        return openSites.contains(xyTo1D(row, col));
+        return openSites[row][col];
     }
 
     // is the site (row, col) full?
@@ -78,7 +84,7 @@ public class Percolation {
 
     // number of open sites
     public int numberOfOpenSites() {
-        return openSites.size();
+        return numberOfOpenSites;
     }
 
     // does the system percolate?
