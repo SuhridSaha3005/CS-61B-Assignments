@@ -77,8 +77,8 @@ public class KDTree implements PointSet {
         if (Point.distance(space.point, goal) < Point.distance(best, goal)) {
             best = space.point; // change best to node since node is closer
         }
-        KDTree goodSide; // More likely to have nearest point
-        KDTree badSide; // Less likely to have nearest point
+        KDTree goodSide;
+        KDTree badSide;
         double cmp = space.compare(goal);
         if (cmp < 0) {
             goodSide = space.left;
@@ -87,10 +87,9 @@ public class KDTree implements PointSet {
             goodSide = space.right;
             badSide = space.left;
         }
-        best = nearest(goodSide, goal, best); // Search more likely child for best
-        /* Prunes the "bad" child if no point in child could possibly be best */
+        best = nearest(goodSide, goal, best);
         if (Math.pow(cmp, 2) <= Point.distance(best, goal)) {
-            best = nearest(badSide, goal, best); // The magic pruning code!
+            best = nearest(badSide, goal, best);
         }
         return best;
     }
