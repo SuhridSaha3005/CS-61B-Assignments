@@ -130,6 +130,7 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
         swap(1, size);
         hashHeap.remove(min);
         positions.remove(min);
+        minHeap[size] = null;
         size -= 1;
         sink(1);
         if (4 * size < minHeap.length) {
