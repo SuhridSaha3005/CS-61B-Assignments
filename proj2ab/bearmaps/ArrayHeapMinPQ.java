@@ -38,12 +38,12 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
     }
 
     /* Helper method: Compares priorities of keys in positions i and j */
-    private int compare (int i, int j) {
+    private int compare(int i, int j) {
         return Double.compare(priority(minHeap[i]), priority(minHeap[j]));
     }
 
     /* Helper method: Swaps keys in positions i and j */
-    private void swap (int i, int j) {
+    private void swap(int i, int j) {
         positions.put(minHeap[i], j);
         positions.put(minHeap[j], i);
         T temp = minHeap[i];
@@ -52,7 +52,7 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
     }
 
     /* Resizes minHeap to length 'capacity' */
-    private void resize (int capacity) {
+    private void resize(int capacity) {
         T[] temp = (T[]) new Object[capacity];
         System.arraycopy(minHeap, 1, temp, 1, size);
         minHeap = temp;

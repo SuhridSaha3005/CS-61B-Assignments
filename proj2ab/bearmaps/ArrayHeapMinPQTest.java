@@ -16,7 +16,7 @@ public class ArrayHeapMinPQTest {
     public void testArrayHeapMin() {
         double item, priority;
         ExtrinsicMinPQ<Double> minPQ1, minPQ2;
-        for (int i = 0; i < 100; i ++) {
+        for (int i = 0; i < 100; i++) {
             minPQ1 = new ArrayHeapMinPQ<>();
             minPQ2 = new NaiveMinPQ<>();
             for (int j = 0; j < 200; j++) {
@@ -39,18 +39,18 @@ public class ArrayHeapMinPQTest {
     }
 
     @Test
-    public void testPriorityChange(){
+    public void testPriorityChange() {
         double priority;
         ExtrinsicMinPQ<Integer> minPQ1, minPQ2;
-        for (int i = 0; i < 100; i ++) {
+        for (int i = 0; i < 100; i++) {
             minPQ1 = new ArrayHeapMinPQ<>();
             minPQ2 = new NaiveMinPQ<>();
-            for (int j = 0; j < 1000; j ++) {
+            for (int j = 0; j < 1000; j++) {
                 priority = RAND.nextDouble();
                 minPQ1.add(j, priority);
                 minPQ2.add(j, priority);
             }
-            for (int k = 0; k < 1000; k ++) {
+            for (int k = 0; k < 1000; k++) {
                 priority = RAND.nextDouble();
                 minPQ1.changePriority(k, priority);
                 minPQ2.changePriority(k, priority);
@@ -60,7 +60,7 @@ public class ArrayHeapMinPQTest {
     }
 
     /* @source CS61B Lab5: Used the printTimingTable method from Lab 5 */
-    private static void printTimingTable(List<Integer> Ns, List<Double> times, List<Integer> opCounts) {
+    private void printTimingTable(List<Integer> Ns, List<Double> times, List<Integer> opCounts) {
         System.out.printf("%12s %12s %12s %12s\n", "N", "time (s)", "# ops", "microsec/op");
         System.out.printf("------------------------------------------------------------\n");
         for (int i = 0; i < Ns.size(); i += 1) {
@@ -82,7 +82,7 @@ public class ArrayHeapMinPQTest {
         while (count <= 2000000) {
             minPQ = new ArrayHeapMinPQ<>();
             sw = new Stopwatch();
-            for (int i = 0; i < count; i ++) {
+            for (int i = 0; i < count; i++) {
                 minPQ.add(i, RAND.nextDouble());
             }
             Ns.add(count);
@@ -103,11 +103,11 @@ public class ArrayHeapMinPQTest {
         List<Integer> Ops = new ArrayList<>();
         while (count <= 2000000) {
             minPQ = new ArrayHeapMinPQ<>();
-            for (int i = 0; i < count; i ++) {
+            for (int i = 0; i < count; i++) {
                 minPQ.add(i, RAND.nextDouble());
             }
             sw = new Stopwatch();
-            for (int j = 0; j < count; j ++) {
+            for (int j = 0; j < count; j++) {
                 minPQ.changePriority(j, RAND.nextDouble());
             }
             Ns.add(count);
@@ -129,11 +129,11 @@ public class ArrayHeapMinPQTest {
         List<Integer> Ops = new ArrayList<>();
         while (count <= 1000000) {
             minPQ = new ArrayHeapMinPQ<>();
-            for (int i = 0; i < count; i ++) {
+            for (int i = 0; i < count; i++) {
                 minPQ.add(i, RAND.nextDouble());
             }
             sw = new Stopwatch();
-            for (int j = 0; j < count; j ++) {
+            for (int j = 0; j < count; j++) {
                 minPQ.removeSmallest();
             }
             Ns.add(count);
