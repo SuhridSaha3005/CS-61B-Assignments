@@ -64,7 +64,7 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
     @Override
     public void add(T item, double priority) {
         if (contains(item)) {
-            return;
+            throw new IllegalArgumentException();
         }
         if (size >= minHeap.length - 1) {
             resize(4 * minHeap.length);
