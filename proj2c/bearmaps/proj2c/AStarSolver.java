@@ -17,7 +17,6 @@ public class AStarSolver<Vertex> implements ShortestPathsSolver<Vertex> {
     private final HashMap<Vertex, Vertex> edgeTo;
     private double elapsedTime;
     private int numStates;
-    private static final double infinity = Double.POSITIVE_INFINITY;
     private final double maxTime;
 
     public AStarSolver(AStarGraph<Vertex> input, Vertex start, Vertex end, double timeout) {
@@ -34,20 +33,17 @@ public class AStarSolver<Vertex> implements ShortestPathsSolver<Vertex> {
         elapsedTime = sw.elapsedTime();
         numStates = 0;
         solution = new LinkedList<>();
-        while (fringe.size() != 0 && fringe.getSmallest() != end && elapsedTime < maxTime) {
+        while (fringe.size() != 0 && !goal.equals(fringe.getSmallest()) && elapsedTime < maxTime) {
             p = fringe.removeSmallest();
             numStates += 1;
             for (WeightedEdge<Vertex> edge : graph.neighbors(p)) {
-                if (!distTo.containsKey(edge.to())) {
-                    distTo.put(edge.to(), infinity);
-                }
                 relax(edge);
             }
             elapsedTime = sw.elapsedTime();
         }
         if (fringe.size() != 0 && elapsedTime < maxTime) {
             solution.addFirst(goal);
-            while (solution.getFirst() != start) {
+            while (!solution.getFirst().equals(start)) {
                 solution.addFirst(edgeTo.get(solution.getFirst()));
             }
         }
@@ -57,8 +53,8 @@ public class AStarSolver<Vertex> implements ShortestPathsSolver<Vertex> {
         Vertex p = edge.from();
         Vertex q = edge.to();
         double w = edge.weight();
-        if (distTo.get(p) + w < distTo.get(q)) {
-            distTo.replace(q, distTo.get(p) + w);
+        if (!distTo.containsKey(q) || distTo.get(p) + w < distTo.get(q)) {
+            distTo.put(q, distTo.get(p) + w);
             edgeTo.put(q, p);
             if (fringe.contains(q)) {
                 fringe.changePriority(q, distTo.get(q) + graph.estimatedDistanceToGoal(q, goal));
