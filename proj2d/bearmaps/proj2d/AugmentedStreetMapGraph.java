@@ -35,8 +35,8 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
         List<Node> lst;
         for (Node vertex : nodes) {
             if (vertex.name() != null) {
+                trieNames.add(vertex.name());
                 s = cleanString(vertex.name());
-                trieNames.add(s);
                 if (nameMap.containsKey(s)) {
                     lst = nameMap.get(s);
                     lst.add(vertex);
@@ -125,7 +125,8 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
             List<String> lst = new ArrayList<>();
             char first = prefix.charAt(0);
             String rest = prefix.substring(1);
-            if (n.next.containsKey(first)) {
+            if (n.next.containsKey(Character.toLowerCase(first))
+                    || n.next.containsKey(Character.toUpperCase(first))) {
                 for (String s : containsPrefix(n.next.get(first), rest)) {
                     lst.add(Character.toString(first) + s);
                 }
