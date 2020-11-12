@@ -99,6 +99,9 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
 
         private List<String> collect(TrieNode n) {
             List<String> lst = new ArrayList<>();
+            if (n == null) {
+                return lst;
+            }
             for (Map.Entry<Character, TrieNode> entry: n.next.entrySet()) {
                 colHelp(Character.toString(entry.getKey()), lst, entry.getValue());
             }
@@ -123,6 +126,9 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
                 return collect(n);
             }
             List<String> lst = new ArrayList<>();
+            if (n == null) {
+                return lst;
+            }
             char first = prefix.charAt(0);
             String rest = prefix.substring(1);
             if (n.next.containsKey(Character.toLowerCase(first))
