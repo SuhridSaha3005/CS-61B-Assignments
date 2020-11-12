@@ -85,7 +85,9 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
             TrieNode restNode;
             if (n.next.containsKey(first)) {
                 restNode = n.next.get(first);
-                restNode.isKey = isKey;
+                if (!restNode.isKey) {
+                    restNode.isKey = isKey;
+                }
             } else {
                 restNode = new TrieNode(isKey, new HashMap<>());
             }
