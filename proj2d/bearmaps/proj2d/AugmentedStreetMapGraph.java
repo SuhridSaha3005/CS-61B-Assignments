@@ -144,6 +144,9 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
             char first = prefix.charAt(0);
             String rest = prefix.substring(1);
             if (n.next.containsKey(first)) {
+                if (n.next.get(first).next.isEmpty() && rest.isEmpty()) {
+                    lst.add("" + first);
+                }
                 for (String s : containsPrefix(n.next.get(first), rest)) {
                     lst.add(first + s);
                 }
@@ -222,4 +225,5 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
     private static String cleanString(String s) {
         return s.replaceAll("[^a-zA-Z ]", "").toLowerCase();
     }
+
 }
