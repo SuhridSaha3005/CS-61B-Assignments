@@ -34,7 +34,7 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
         String s;
         List<Node> lst;
         for (Node vertex : nodes) {
-            s = vertex.name();
+            s = cleanString(vertex.name());
             trieNames.add(s);
             if (nameMap.containsKey(s)) {
                 lst = nameMap.get(s);
@@ -175,6 +175,9 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
         List<Node> locations = nameMap.get(cleanString(locationName));
         List<Map<String, Object>> lst = new ArrayList<>();
         HashMap<String, Object> locationMap;
+        if (locations == null) {
+            return lst;
+        }
         for (Node location : locations) {
             locationMap = new HashMap<>();
             locationMap.put("lat", location.lat());
