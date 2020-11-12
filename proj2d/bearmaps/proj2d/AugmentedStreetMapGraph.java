@@ -1,11 +1,12 @@
 package bearmaps.proj2d;
 
+import bearmaps.proj2ab.Point;
+import bearmaps.proj2ab.PointSet;
+import bearmaps.proj2ab.WeirdPointSet;
 import bearmaps.proj2c.streetmap.StreetMapGraph;
 import bearmaps.proj2c.streetmap.Node;
 
-import java.util.List;
-import java.util.Map;
-import java.util.LinkedList;
+import java.util.*;
 
 /**
  * An augmented graph that is more powerful that a standard StreetMapGraph.
@@ -16,12 +17,118 @@ import java.util.LinkedList;
  */
 public class AugmentedStreetMapGraph extends StreetMapGraph {
 
+    private final PointSet connectedPoints;
+    private final HashMap<Point, Node> nodePointMap;
+    private final TrieSet trieNames;
+    private final HashMap<String, List<Node>> nameMap;
+
     public AugmentedStreetMapGraph(String dbPath) {
         super(dbPath);
         // You might find it helpful to uncomment the line below:
-        // List<Node> nodes = this.getNodes();
+        List<Node> nodes = this.getNodes();
+        trieNames = new TrieSet();
+        List<Point> points = new ArrayList<>();
+        nodePointMap = new HashMap<>();
+        nameMap = new HashMap<>();
+        Point p;
+        String s;
+        List<Node> lst;
+        for (Node vertex : nodes) {
+            s = vertex.name();
+            trieNames.add(s);
+            if (nameMap.containsKey(s)) {
+                lst = nameMap.get(s);
+                lst.add(vertex);
+                nameMap.replace(s, lst);
+            } else {
+                lst = new ArrayList<>();
+                lst.add(vertex);
+                nameMap.put(s, lst);
+            }
+            if (!neighbors(vertex.id()).isEmpty()) {
+                p = new Point(vertex.lon(), vertex.lat());
+                points.add(p);
+                nodePointMap.put(p, vertex);
+            }
+        }
+        connectedPoints = new WeirdPointSet(points);
     }
 
+    private static class TrieSet {
+        private final TrieNode root;
+
+        private static class TrieNode {
+            public boolean isKey;
+            public HashMap<Character, TrieNode> next;
+
+            public TrieNode(boolean isKey, HashMap<Character, TrieNode> next) {
+                this.isKey = isKey;
+                this.next = next;
+            }
+        }
+
+        public TrieSet() {
+            root = new TrieNode(false, new HashMap<>());
+        }
+
+        public void add(String s) {
+            add(root, s);
+        }
+
+        private void add(TrieNode n, String s) {
+            if (s == null || s.equals("")) {
+                return;
+            }
+            char first = s.charAt(0);
+            String rest = s.substring(1);
+            boolean isKey = rest.equals("");
+            TrieNode restNode;
+            if (n.next.containsKey(first)) {
+                restNode = n.next.get(first);
+                restNode.isKey = isKey;
+            } else {
+                restNode = new TrieNode(isKey, new HashMap<>());
+            }
+            add(restNode, rest);
+            n.next.put(first, restNode);
+        }
+
+        private List<String> collect(TrieNode n) {
+            List<String> lst = new ArrayList<>();
+            for (Map.Entry<Character, TrieNode> entry: n.next.entrySet()) {
+                colHelp(Character.toString(entry.getKey()), lst, entry.getValue());
+            }
+            return lst;
+        }
+
+        private void colHelp(String s, List<String> lst, TrieNode n) {
+            if (n.isKey) {
+                lst.add(s);
+            }
+            for (Map.Entry<Character, TrieNode> entry: n.next.entrySet()) {
+                colHelp(s + Character.toString(entry.getKey()), lst, entry.getValue());
+            }
+        }
+
+        public List<String> containsPrefix(String prefix) {
+            return containsPrefix(root, prefix);
+        }
+
+        private List<String> containsPrefix(TrieNode n, String prefix) {
+            if (prefix == null || prefix.equals("")) {
+                return collect(n);
+            }
+            List<String> lst = new ArrayList<>();
+            char first = prefix.charAt(0);
+            String rest = prefix.substring(1);
+            if (n.next.containsKey(first)) {
+                for (String s : containsPrefix(n.next.get(first), rest)) {
+                    lst.add(Character.toString(first) + s);
+                }
+            }
+            return lst;
+        }
+    }
 
     /**
      * For Project Part II
@@ -31,7 +138,9 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
      * @return The id of the node in the graph closest to the target.
      */
     public long closest(double lon, double lat) {
-        return 0;
+        Point closestPoint = connectedPoints.nearest(lon, lat);
+        Node closestNode = nodePointMap.get(closestPoint);
+        return closestNode.id();
     }
 
 
@@ -44,7 +153,7 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
      * cleaned <code>prefix</code>.
      */
     public List<String> getLocationsByPrefix(String prefix) {
-        return new LinkedList<>();
+        return trieNames.containsPrefix(cleanString(prefix));
     }
 
     /**
@@ -61,7 +170,18 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
      * "id" -> Number, The id of the node. <br>
      */
     public List<Map<String, Object>> getLocations(String locationName) {
-        return new LinkedList<>();
+        List<Node> locations = nameMap.get(cleanString(locationName));
+        List<Map<String, Object>> lst = new ArrayList<>();
+        HashMap<String, Object> locationMap;
+        for (Node location : locations) {
+            locationMap = new HashMap<>();
+            locationMap.put("lat", location.lat());
+            locationMap.put("lon", location.lon());
+            locationMap.put("name", location.name());
+            locationMap.put("id", location.id());
+            lst.add(locationMap);
+        }
+        return lst;
     }
 
 
