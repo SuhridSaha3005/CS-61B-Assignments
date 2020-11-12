@@ -34,16 +34,18 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
         String s;
         List<Node> lst;
         for (Node vertex : nodes) {
-            s = cleanString(vertex.name());
-            trieNames.add(s);
-            if (nameMap.containsKey(s)) {
-                lst = nameMap.get(s);
-                lst.add(vertex);
-                nameMap.replace(s, lst);
-            } else {
-                lst = new ArrayList<>();
-                lst.add(vertex);
-                nameMap.put(s, lst);
+            if (vertex.name() != null) {
+                s = cleanString(vertex.name());
+                trieNames.add(s);
+                if (nameMap.containsKey(s)) {
+                    lst = nameMap.get(s);
+                    lst.add(vertex);
+                    nameMap.replace(s, lst);
+                } else {
+                    lst = new ArrayList<>();
+                    lst.add(vertex);
+                    nameMap.put(s, lst);
+                }
             }
             if (!neighbors(vertex.id()).isEmpty()) {
                 p = new Point(vertex.lon(), vertex.lat());
