@@ -21,6 +21,7 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
     private final HashMap<Point, Node> nodePointMap;
     private final TrieSet trieNames;
     private final HashMap<String, List<Node>> nameMap;
+    private final HashMap<String, String> cleanMap;
 
     public AugmentedStreetMapGraph(String dbPath) {
         super(dbPath);
@@ -30,12 +31,14 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
         List<Point> points = new ArrayList<>();
         nodePointMap = new HashMap<>();
         nameMap = new HashMap<>();
+        cleanMap = new HashMap<>();
         Point p;
         String s;
         List<Node> lst;
         for (Node vertex : nodes) {
             if (vertex.name() != null) {
-                trieNames.add(vertex.name());
+                trieNames.add(cleanString(vertex.name()));
+                cleanMap.put(cleanString(vertex.name()), vertex.name());
                 s = cleanString(vertex.name());
                 if (nameMap.containsKey(s)) {
                     lst = nameMap.get(s);
@@ -136,11 +139,6 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
                     lst.add(first + s);
                 }
             }
-            if (n.next.containsKey(Character.toUpperCase(first))) {
-                for (String s : containsPrefix(n.next.get(Character.toUpperCase(first)), rest)) {
-                    lst.add(Character.toString(first).toUpperCase() + s);
-                }
-            }
             return lst;
         }
     }
@@ -168,7 +166,11 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
      * cleaned <code>prefix</code>.
      */
     public List<String> getLocationsByPrefix(String prefix) {
-        return trieNames.containsPrefix(cleanString(prefix));
+        List<String> lst = new ArrayList<>();
+        for (String s : trieNames.containsPrefix(cleanString(prefix))) {
+            lst.add(cleanMap.get(s));
+        }
+        return lst;
     }
 
     /**
@@ -211,5 +213,4 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
     private static String cleanString(String s) {
         return s.replaceAll("[^a-zA-Z ]", "").toLowerCase();
     }
-
 }
