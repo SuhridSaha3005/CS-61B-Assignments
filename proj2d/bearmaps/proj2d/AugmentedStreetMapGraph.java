@@ -113,7 +113,7 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
                 lst.add(s);
             }
             for (Map.Entry<Character, TrieNode> entry: n.next.entrySet()) {
-                colHelp(s + Character.toString(entry.getKey()), lst, entry.getValue());
+                colHelp(s + entry.getKey(), lst, entry.getValue());
             }
         }
 
@@ -131,10 +131,14 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
             }
             char first = prefix.charAt(0);
             String rest = prefix.substring(1);
-            if (n.next.containsKey(Character.toLowerCase(first))
-                    || n.next.containsKey(Character.toUpperCase(first))) {
+            if (n.next.containsKey(first)) {
                 for (String s : containsPrefix(n.next.get(first), rest)) {
-                    lst.add(Character.toString(first) + s);
+                    lst.add(first + s);
+                }
+            }
+            if (n.next.containsKey(Character.toUpperCase(first))) {
+                for (String s : containsPrefix(n.next.get(Character.toUpperCase(first)), rest)) {
+                    lst.add(Character.toString(first).toUpperCase() + s);
                 }
             }
             return lst;
@@ -197,7 +201,6 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
         }
         return lst;
     }
-
 
     /**
      * Useful for Part III. Do not modify.
