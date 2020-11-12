@@ -21,7 +21,7 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
     private final HashMap<Point, Node> nodePointMap;
     private final TrieSet trieNames;
     private final HashMap<String, List<Node>> nameMap;
-    private final HashMap<String, String> cleanMap;
+    private final HashMap<String, List<String>> cleanMap;
 
     public AugmentedStreetMapGraph(String dbPath) {
         super(dbPath);
@@ -34,11 +34,20 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
         cleanMap = new HashMap<>();
         Point p;
         String s;
+        List<String> ls;
         List<Node> lst;
         for (Node vertex : nodes) {
             if (vertex.name() != null) {
                 trieNames.add(cleanString(vertex.name()));
-                cleanMap.put(cleanString(vertex.name()), vertex.name());
+                if (cleanMap.containsKey(cleanString(vertex.name()))) {
+                    ls = cleanMap.get(cleanString(vertex.name()));
+                    ls.add(vertex.name());
+                    cleanMap.replace(cleanString(vertex.name()), ls);
+                } else {
+                    ls = new ArrayList<>();
+                    ls.add(vertex.name());
+                    cleanMap.put(cleanString(vertex.name()), ls);
+                }
                 s = cleanString(vertex.name());
                 if (nameMap.containsKey(s)) {
                     lst = nameMap.get(s);
@@ -168,7 +177,7 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
     public List<String> getLocationsByPrefix(String prefix) {
         List<String> lst = new ArrayList<>();
         for (String s : trieNames.containsPrefix(cleanString(prefix))) {
-            lst.add(cleanMap.get(s));
+            lst.addAll(cleanMap.get(s));
         }
         return lst;
     }
